@@ -3,7 +3,6 @@ import { createContext } from 'react';
 
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
 export const BASE_API_URL = 'https://api.lambdabot.cf';
-export const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 export type OAuthData = {
     access_token: string,
@@ -87,11 +86,9 @@ export class Api {
     }
 
     async fetchUserData(): Promise<UserData> {
-        const headers = {
-            Authorization: `${this.accessTokenType!} ${this.accessToken!}`,
-        };
-
-        const data = await this.request('GET', '/users/@me', { headers, base: DISCORD_API_URL });
+        const data = await this.request('GET', '/discord/user', {
+            params: { token: this.accessToken, tt: this.accessTokenType },
+        });
         this.userData = data;
         return data;
     }
