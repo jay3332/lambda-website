@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import NavBar from '../components/NavBar';
 import Title from '../components/Title';
 
 import LambdaIconSource from '../assets/lambda.png';
@@ -72,6 +73,7 @@ export default function Homepage() {
     return (
         <>
             <Title>Lambda: Homepage</Title>
+            <NavBar />
             <Banner>
                 <LambdaIcon src={LambdaIconSource} />
                 <BannerContent>

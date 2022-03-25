@@ -17,6 +17,8 @@ const GlobalStyle = createGlobalStyle`
         --theme-primary-dark-hover: #5d5d5d;
         --theme-primary: #4273ac;
         --theme-primary-hover: #518dd3;
+        --theme-navbar: #222325;
+        --theme-login: #121213;
     }
     
     * {
@@ -33,6 +35,8 @@ const GlobalStyle = createGlobalStyle`
     a {
         color: var(--theme-link);
         transition: color 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
     }
     
     a:hover {
