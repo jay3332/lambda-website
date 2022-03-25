@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 
+import { ApiContext, DefaultApi } from './Api';
 import Title from '../components/Title';
 import Homepage from '../pages/Homepage';
 
@@ -10,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
         --font-primary: 'Inter', serif;
         --theme-background: #1a1d1d;
         --theme-text: #ffffff;
-        --theme-text-secondary: #797979;
+        --theme-text-secondary: #f7c3c3;
         --theme-link: #2fbdff;
         --theme-link-hover: #6deeff;
         --theme-primary-dark: #404249;
@@ -63,13 +64,15 @@ export default function App() {
         <>
             <GlobalStyle />
             <Title>Lambda</Title>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Homepage />}>
-                        <Route index element={<Homepage />}/>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+            <ApiContext.Provider value={DefaultApi}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Homepage />}>
+                            <Route index element={<Homepage />}/>
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+            </ApiContext.Provider>
         </>
     );
 }

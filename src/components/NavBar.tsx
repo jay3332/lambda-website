@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { ApiContext } from '../app/Api';
+import type { UserData } from '../app/Api';
 
 const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf";
 
@@ -63,11 +66,35 @@ const Login = styled.div`
     align-items: center;
     justify-content: center;
     background-color: var(--theme-login);
-    width: 15vw;
+    width: max(15vw, 300px);
 `;
 
 const LoginLink = styled.a`
     font-weight: bold;
+`;
+
+const UserAvatar = styled.img`
+    padding-right: 0.5em;
+    border-radius: 50%;
+    width: 40px;
+`;
+
+const UserDetails = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+`;
+
+const LoggedInAs = styled.div`
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.5;
+`;
+
+const UserTag = styled.div`
+    font-size: 18px;
+    opacity: 0.9;
 `;
 
 function NavigationItemComponent({ label, href }: { label: string, href: string }) {
@@ -79,15 +106,34 @@ function NavigationItemComponent({ label, href }: { label: string, href: string 
 }
 
 export default function NavBar() {
+    const [ user, setUser ] = useState<UserData | null>(null);
+    const api = useContext(ApiContext);
+
+    useEffect(() => {
+        api.login().then(success => {
+            if (success) setUser(api.userData);
+        });
+    }, []);
+
     return (
         <NavAndLogin>
             <Navigation>
                 <NavigationItemComponent label="Home" href="/"/>
             </Navigation>
             <Login>
-                <LoginLink href={OAUTH_URL}>
-                    Log In
-                </LoginLink>
+                {user ? (
+                    <>
+                        <UserAvatar src={api.avatarUrl} />
+                        <UserDetails>
+                            <LoggedInAs>Logged in as</LoggedInAs>
+                            <UserTag>{user.username}#{user.discriminator}</UserTag>
+                        </UserDetails>
+                    </>
+                ) : (
+                    <LoginLink href={OAUTH_URL}>
+                        Log In
+                    </LoginLink>
+                )}
             </Login>
         </NavAndLogin>
     );
