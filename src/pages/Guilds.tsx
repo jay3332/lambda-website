@@ -95,10 +95,23 @@ const GuildReason = styled.span`
     opacity: 0.6;
 `;
 
+const GuildSearch = styled.input`
+    flex-grow: 1;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--theme-login);
+    width: min(80vw, 400px);
+    height: 40px;
+    font-size: 20px;
+    margin: 16px;
+    padding: 4px 8px;
+`;
+
 export default function Guilds() {
     const api = useContext(ApiContext);
     let [ guilds, setGuilds ] = useState<GuildData[] | null>(null);
     let [ loggedOut, setLoggedOut ] = useState<boolean>(false);
+    let [ searchQuery, setSearchQuery ] = useState<string>("");
 
     useEffect(() => {
         api.ensureGuildData().then(r => {
@@ -119,8 +132,16 @@ export default function Guilds() {
                 <GuildArea>
                     <h1>Servers</h1>
                     <p>Please select a server to continue.</p>
+                    <GuildSearch onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." />
                     <GuildsView>
-                        {guilds ? guilds.sort(g => -g.status + 1).map(g => {
+                        {guilds ? guilds.filter(
+                            g =>
+                                searchQuery.length === 0
+                                || g.id === searchQuery
+                                || g.name.toLowerCase().includes(searchQuery.toLowerCase())
+                        )
+                        .sort(g => -g.status + 1)
+                        .map(g => {
                             const Component = g.status === 2 ? GuildButton : GuildDisabledButton;
                             return (
                                 // @ts-ignore
@@ -140,8 +161,8 @@ export default function Guilds() {
                                                 ? 'You lack permissions.'
                                                 : (
                                                     <>
-                                                        I&apos;m not in this server.
-                                                        <a href={`${BOT_INVITE}&guild_id=${g.id}`}> Invite me!</a>
+                                                        I&apos;m not in this server.&nbsp;
+                                                        <a href={`${BOT_INVITE}&guild_id=${g.id}`}>Invite me!</a>
                                                     </>
                                                 )    
                                             }</GuildReason>
