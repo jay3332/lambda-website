@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { ApiContext } from '../app/Api';
 import type { UserData } from '../app/Api';
 
+import LambdaIcon from '../assets/lambda.png';
+
 const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf";
 
 const NavAndLogin = styled.div`
@@ -97,6 +99,20 @@ const UserTag = styled.div`
     opacity: 0.9;
 `;
 
+const IconContainer = styled(Link)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--theme-navbar);
+`;
+
+const Icon = styled.img`
+    width: 42px;
+    border-radius: 50%;
+    margin: 16px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+`;
+
 function NavigationItemComponent({ label, href }: { label: string, href: string }) {
     return (
         <NavigationItemStyle>
@@ -117,8 +133,12 @@ export default function NavBar() {
 
     return (
         <NavAndLogin>
+            <IconContainer to="/">
+                <Icon src={LambdaIcon} />
+            </IconContainer>
             <Navigation>
                 <NavigationItemComponent label="Home" href="/"/>
+                <NavigationItemComponent label="Dashboard" href="/guilds"/>
             </Navigation>
             <Login>
                 {user ? (

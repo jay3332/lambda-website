@@ -26,17 +26,29 @@ export type UserData = {
     public_flags: number,
 };
 
+export type GuildData = {
+    id: string,
+    name: string,
+    icon?: string,
+    owner: boolean,
+    permissions: string,  // stringified number
+    features: string[],
+    status: 0 | 1 | 2,
+};
+
 export class Api {
     oauthData: OAuthData | null;
     userData: UserData | null;
     accessToken: string | null;
     accessTokenType: string | null;
+    guilds: GuildData[] | null;
 
     constructor() {
         this.oauthData = null;
         this.accessTokenType = null;
         this.accessToken = null;
         this.userData = null;
+        this.guilds = null;
     }
 
     async ensureUserData() {
@@ -50,6 +62,17 @@ export class Api {
             let data = await this.fetchUserData();
             Cookies.set('user_data', JSON.stringify(data), { expires: 1 });
         }
+    }
+
+    async ensureGuildData(): Promise<GuildData[] | undefined> {
+        if (!await this.login()) return;
+        if (this.guilds) return this.guilds;
+
+        let data = await this.request('GET', '/discord/guilds', {
+            params: { token: this.accessToken, tt: this.accessTokenType, user_id: this.userData!.id },
+        });
+        this.guilds = data;
+        return data;
     }
 
     async ensureAccessToken(): Promise<string | undefined> {

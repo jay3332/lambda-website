@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 import { ApiContext, DefaultApi } from './Api';
 import Title from '../components/Title';
 import Homepage from '../pages/Homepage';
+import Guilds from '../pages/Guilds';
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -67,7 +68,8 @@ export default function App() {
             <ApiContext.Provider value={DefaultApi}>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Homepage />}>
+                        <Route path="/">
+                            <Route path="guilds" element={<Guilds/>} />
                             <Route index element={<Homepage />}/>
                         </Route>
                     </Routes>

@@ -7,6 +7,8 @@ import Title from '../components/Title';
 
 import LambdaIconSource from '../assets/lambda.png';
 
+export const BOT_INVITE: string = "https://discord.com/oauth2/authorize?client_id=734872509912186921&scope=bot+applications.commands&permissions=8";
+
 const Banner = styled.div`
     display: flex;
     width: 100vw;
@@ -80,10 +82,10 @@ export default function Homepage() {
                     <LambdaHeader>Lambda</LambdaHeader>
                     <LambdaDescription>A multipurpose bot for Discord.</LambdaDescription>
                     <BannerButtons>
-                        <a href="https://discord.com/oauth2/authorize?client_id=734872509912186921&scope=bot+applications.commands&permissions=8">
+                        <a href={BOT_INVITE}>
                             Add Lambda
                         </a>
-                        <BannerDashboardButton to="/dashboard">Dashboard</BannerDashboardButton>
+                        <BannerDashboardButton to="/guilds">Dashboard</BannerDashboardButton>
                     </BannerButtons>
                 </BannerContent>
             </Banner>
