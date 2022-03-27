@@ -6,10 +6,13 @@ import { ApiContext, DefaultApi } from './Api';
 import Title from '../components/Title';
 import Homepage from '../pages/Homepage';
 import Guilds from '../pages/Guilds';
+import Dashboard from '../pages/dashboard/Entrypoint';
 
 const GlobalStyle = createGlobalStyle`
     :root {
         --font-primary: 'Inter', serif;
+        --theme-background-lightest: #34353a;
+        --theme-background-light: #29292e;
         --theme-background: #1a1d1d;
         --theme-text: #ffffff;
         --theme-text-secondary: #f7c3c3;
@@ -19,6 +22,9 @@ const GlobalStyle = createGlobalStyle`
         --theme-primary-dark-hover: #5d5d5d;
         --theme-primary: #4273ac;
         --theme-primary-hover: #518dd3;
+        --theme-submit: #47b360;
+        --theme-submit-hover: #41d374;
+        --theme-error: #fc2c44;
         --theme-navbar: #222325;
         --theme-login: #121213;
     }
@@ -70,6 +76,7 @@ export default function App() {
                     <Routes>
                         <Route path="/">
                             <Route path="guilds" element={<Guilds/>} />
+                            <Route path="guild/:guildId/*" element={<Dashboard />} />
                             <Route index element={<Homepage />}/>
                         </Route>
                     </Routes>

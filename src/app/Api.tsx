@@ -36,12 +36,22 @@ export type GuildData = {
     status: 0 | 1 | 2,
 };
 
+export type GuildStoredData = {
+    prefixes: string[],
+};
+
+export type PrefixRouteSuccessData = {
+    prefixes: string[],
+    success: true,
+};
+
 export class Api {
     oauthData: OAuthData | null;
     userData: UserData | null;
     accessToken: string | null;
     accessTokenType: string | null;
     guilds: GuildData[] | null;
+    guildStores: { [ guildId: string ]: GuildStoredData };
 
     constructor() {
         this.oauthData = null;
@@ -49,6 +59,7 @@ export class Api {
         this.accessToken = null;
         this.userData = null;
         this.guilds = null;
+        this.guildStores = {};
     }
 
     async ensureUserData() {
@@ -62,6 +73,21 @@ export class Api {
             let data = await this.fetchUserData();
             Cookies.set('user_data', JSON.stringify(data), { expires: 1 });
         }
+    }
+
+    async ensureGuildStore(guildId: string): Promise<GuildStoredData> {
+        if (this.guildStores[guildId])
+            return this.guildStores[guildId];
+        
+        let data = await this.request('GET', `/data/${guildId}`, {
+            params: {
+                token: this.accessToken,
+                tt: this.accessTokenType,
+                user_id: this.userData!.id,
+            },
+        });
+        this.guildStores[guildId] = data;
+        return data;
     }
 
     async ensureGuildData(): Promise<GuildData[] | undefined> {
@@ -119,10 +145,35 @@ export class Api {
     async exchangeOauth(code: string): Promise<OAuthData> {
         let oauthData;
         
-        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { params: { code } })
+        let location = window.location.hostname === 'localhost'
+            ? window.location.origin + window.location.pathname
+            : undefined;
+        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { params: { code, redirect_uri: location } });
         this.accessToken = oauthData.access_token;
 
         return this.oauthData!;
+    }
+
+    addPrefix(guildId: string, prefix: string): Promise<PrefixRouteSuccessData> {
+        return this.request('PUT', `/prefixes/${guildId}`, {
+            params: {
+                token: this.accessToken,
+                tt: this.accessTokenType,
+                user_id: this.userData!.id,
+            },
+            json: { prefix },
+        });
+    }
+
+    removePrefix(guildId: string, prefix: string): Promise<PrefixRouteSuccessData> {
+        return this.request('DELETE', `/prefixes/${guildId}`, {
+            params: {
+                token: this.accessToken,
+                tt: this.accessTokenType,
+                user_id: this.userData!.id,
+            },
+            json: { prefix },
+        });
     }
 
     async request(
@@ -142,8 +193,8 @@ export class Api {
             base?: string,
         } = {},
     ): Promise<any> {
-        if (json && !headers['Content-Type']) {
-            headers['Content-Type'] = 'application/json';
+        if (json) {
+            headers['Content-Type'] ||= 'application/json';
             body = JSON.stringify(json)
         }
 
@@ -177,7 +228,13 @@ export class Api {
         if (!avatar)
             return `https://cdn.discordapp.com/embed/avatars/${this.userData.discriminator as unknown as number % 5}.png`;
 
-        return `https://cdn.discordapp.com/avatars/${this.userData.id}/${avatar}.png`;
+        return `https://cdn.discordapp.com/avatars/${this.userData.id}/${avatar}.${avatar.startsWith('a_') ? 'gif' : 'png'}`;
+    }
+
+    guildIconUrl(guild: GuildData): string {
+        return guild.icon
+            ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("a_") ? "gif" : "png"}`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png'
     }
 }
 

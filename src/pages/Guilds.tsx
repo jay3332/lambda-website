@@ -146,11 +146,7 @@ export default function Guilds() {
                             return (
                                 // @ts-ignore
                                 <Component key={g.id} to={`/guild/${g.id}`} status={g.status}>
-                                    <GuildIcon src={
-                                        g.icon
-                                        ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png`
-                                        : 'https://cdn.discordapp.com/embed/avatars/0.png'
-                                    } />
+                                    <GuildIcon src={api.guildIconUrl(g)} />
                                     {g.status === 2 ? (
                                         <GuildName>{g.name}</GuildName>
                                     ) : (
