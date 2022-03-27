@@ -45,6 +45,27 @@ export type PrefixRouteSuccessData = {
     success: true,
 };
 
+export class ApiError extends Error {
+    route: string;
+    response: Response;
+    text: string;
+    json?: any;
+
+    constructor(route: string, response: Response, text: string) {
+        super(`Failed request to ${route}: ${response.status} ${response.statusText}. Body: ${text}`);
+
+        this.route = route;
+        this.response = response;
+        this.text = text;
+
+        try {
+            this.json = JSON.parse(text);
+        } catch (e) {
+            this.json = null;
+        }
+    }
+}
+
 export class Api {
     oauthData: OAuthData | null;
     userData: UserData | null;
@@ -209,10 +230,11 @@ export class Api {
 
         if (!response.ok) { 
             console.error(message);
-            throw new Error(`Failed request to ${route}: ${response.status}: ${response.statusText}`);
+            throw new ApiError(route, response, text);
         }
 
-        console.debug(message);
+        if (window.debugRequests)
+            console.debug(message);
 
         if (response.headers.get('Content-Type') === 'application/json') {
             return JSON.parse(text)

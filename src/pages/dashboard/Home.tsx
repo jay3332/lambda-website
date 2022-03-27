@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ApiContext, GuildStoredData } from '../../app/Api';
@@ -23,6 +23,10 @@ const Box = styled.div`
     }
 `;
 
+const Error = styled.p`
+    color: var(--theme-error);
+`;
+
 const PrefixEntry = styled.div`
     display: flex;
     align-items: center;
@@ -37,14 +41,16 @@ const PrefixEntry = styled.div`
 const PrefixText = styled.span<{ prefix: string }>`
     opacity: ${props => props.prefix ? 1 : 0.3};
     font-weight: ${props => props.prefix ? 'inherit' : 'bold'};
+    overflow-wrap: anywhere;
 `;
 
 const PrefixDelete = styled.span`
     cursor: pointer;
-    opacity: 0.4;
+    opacity: 0.6;
     color: var(--theme-error);
     transition: opacity 0.4s ease;
     font-size: 0.9em;
+    padding-left: 6px;
 
     &:hover {
         opacity: 1;
@@ -91,14 +97,30 @@ export default function DashboardHomepage() {
     const { guildId } = useParams();
 
     const [ data, setData ] = useState<GuildStoredData>();
+    const [ error, setError ] = useState<string | undefined>();
+    const [ forbidden, setForbidden ] = useState<boolean>(false);
     const api = useContext(ApiContext);
 
     useEffect(() => {
         api.ensureGuildStore(guildId!).then(r => {
             if (!r) return;
             setData(r);
+        })
+        .catch(e => {
+            if (e.response.status === 401) {
+                setForbidden(true);
+            }
         });
     }, [ guildId ]);
+
+    if (forbidden) {
+        return (
+            <Error>
+                Unauthorized! You do not have permissions to access this server&apos;s dashboard.&nbsp;
+                <Link to='/guilds'>Select a different server?</Link>
+            </Error>
+        );
+    }
 
     return (
         <Box>
@@ -108,11 +130,16 @@ export default function DashboardHomepage() {
                 ? data.prefixes.map(p => (
                     <PrefixEntry key={p}>
                         <PrefixText prefix={p}>{p || '[blank prefix]'}</PrefixText>
-                        <PrefixDelete onClick={() => {
-                            api.removePrefix(guildId!, p!).then(({ prefixes }) => {
-                                setData({ ...data, prefixes });
-                            })
-                        }}>Delete</PrefixDelete>
+                        <PrefixDelete
+                            onClick={() => api.removePrefix(guildId!, p!)
+                                .then(({ prefixes }) => {
+                                    setData({ ...data, prefixes });
+                                })
+                                .catch(e => setError(e.json.error))
+                            }
+                        >
+                            Delete
+                        </PrefixDelete>
                     </PrefixEntry>
                 ))
                 : 'No prefixes.'
@@ -125,10 +152,18 @@ export default function DashboardHomepage() {
                 const [input, submit] = e.target;
                 submit.disabled = true;
 
-                const { prefixes } = await api.addPrefix(guildId!, input.value);
-                setData({ ...data, prefixes });
-                
+                const result = await api.addPrefix(guildId!, input.value)
+                    .catch(e => setError(e.json.error));
+
                 input.value = '';
+                if (!result) {
+                    submit.disabled = false;
+                    return
+                }
+                const { prefixes } = result;
+
+                setData({ ...data, prefixes });
+                setError(undefined);
                 submit.disabled = false;
             }}>
                 <PrefixInput
@@ -139,6 +174,7 @@ export default function DashboardHomepage() {
                 />
                 <PrefixSubmit type='submit' value='Add' />
             </PrefixInputContainer>
+            {error && <Error>{error}</Error>}
         </Box>
     )
 }

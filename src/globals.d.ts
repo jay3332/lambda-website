@@ -8,5 +8,6 @@ declare global {
 
     interface Window {
         api: Api;
+        debugRequests: boolean;
     }
 }
