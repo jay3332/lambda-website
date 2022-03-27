@@ -166,10 +166,11 @@ export class Api {
     async exchangeOauth(code: string): Promise<OAuthData> {
         let oauthData;
         
-        let location = window.location.hostname === 'localhost'
-            ? window.location.origin + window.location.pathname
-            : undefined;
-        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { params: { code, redirect_uri: location } });
+        let params: any = { code };
+        if (window.location.hostname !== 'localhost')
+            params.redirect_uri = window.location.origin + window.location.pathname;
+
+        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { params });
         this.accessToken = oauthData.access_token;
 
         return this.oauthData!;
