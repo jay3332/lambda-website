@@ -7,6 +7,7 @@ import Title from '../components/Title';
 import Homepage from '../pages/Homepage';
 import Guilds from '../pages/Guilds';
 import Dashboard from '../pages/dashboard/Entrypoint';
+import RankCardEditor from '../pages/RankCardEditor';
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -77,6 +78,7 @@ export default function App() {
                         <Route path="/">
                             <Route path="guilds" element={<Guilds/>} />
                             <Route path="guild/:guildId/*" element={<Dashboard />} />
+                            <Route path="rank-card" element={<RankCardEditor />} />
                             <Route index element={<Homepage />}/>
                         </Route>
                     </Routes>

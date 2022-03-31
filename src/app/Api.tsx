@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 import { createContext } from 'react';
 
+import type { RankCardConfig } from '../components/RankCard';
+
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
 export const BASE_API_URL = 'https://api.lambdabot.cf';
 
@@ -198,6 +200,10 @@ export class Api {
         });
     }
 
+    fetchRankCard(): Promise<RankCardConfig> {
+        return this.request('GET', `/rank-card/${this.userData!.id}`);
+    }
+
     async request(
         method: RequestMethod,
         route: string,
@@ -251,7 +257,7 @@ export class Api {
         if (!avatar)
             return `https://cdn.discordapp.com/embed/avatars/${this.userData.discriminator as unknown as number % 5}.png`;
 
-        return `https://cdn.discordapp.com/avatars/${this.userData.id}/${avatar}.${avatar.startsWith('a_') ? 'gif' : 'png'}`;
+        return `https://cdn.discordapp.com/avatars/${this.userData.id}/${avatar}.${avatar.startsWith('a_') ? 'gif' : 'png'}?size=512`;
     }
 
     guildIconUrl(guild: GuildData): string {
