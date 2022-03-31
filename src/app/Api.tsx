@@ -53,22 +53,18 @@ export class ApiError extends Error {
     text: string;
     json?: any;
 
-    constructor(route: string, response: Response, text: string) {
+    constructor(route: string, response: Response, text: string, json?: any) {
         super(`Failed request to ${route}: ${response.status} ${response.statusText}. Body: ${text}`);
 
         this.route = route;
         this.response = response;
         this.text = text;
-
-        try {
-            this.json = JSON.parse(text);
-        } catch (e) {
-            this.json = null;
-        }
+        this.json = json;
     }
 }
 
 export class Api {
+    token: string | null;
     oauthData: OAuthData | null;
     userData: UserData | null;
     accessToken: string | null;
@@ -77,6 +73,7 @@ export class Api {
     guildStores: { [ guildId: string ]: GuildStoredData };
 
     constructor() {
+        this.token = null;
         this.oauthData = null;
         this.accessTokenType = null;
         this.accessToken = null;
@@ -86,6 +83,9 @@ export class Api {
     }
 
     async ensureUserData() {
+        if (this.userData != null)
+            return this.userData;
+
         let data = Cookies.get('user_data');
         if (data) {
             this.userData = JSON.parse(data);
@@ -122,6 +122,26 @@ export class Api {
         });
         this.guilds = data;
         return data;
+    }
+
+    async ensureToken(force: boolean = false): Promise<string | null> {
+        if (!force) {
+            if (this.token) return this.token;
+
+            let token = Cookies.get('token');
+            if (token) {
+                this.token = token;
+                return token;
+            }
+        }
+
+        let response = await this.request('POST', `/auth/${this.userData!.id}`, {
+            params: { token: this.accessToken, tt: this.accessTokenType },
+        });
+        this.token = response.token;
+        Cookies.set('token', this.token!);
+
+        return this.token;
     }
 
     async ensureAccessToken(): Promise<string | undefined> {
@@ -204,6 +224,12 @@ export class Api {
         return this.request('GET', `/rank-card/${this.userData!.id}`);
     }
 
+    editRankCard(payload: Partial<RankCardConfig>): Promise<{ success: true, updated: RankCardConfig }> {
+        return this.request('PATCH', `/rank-card/${this.userData!.id}`, {
+            json: payload,
+        });
+    }
+
     async request(
         method: RequestMethod,
         route: string,
@@ -213,18 +239,24 @@ export class Api {
             json,
             params,
             base,
+            allowReauth = true,
         }: {
             body?: string,
             json?: any,
             params?: any,
             headers?: any,
             base?: string,
+            allowReauth?: boolean,
         } = {},
     ): Promise<any> {
         if (json) {
             headers['Content-Type'] ||= 'application/json';
             body = JSON.stringify(json)
         }
+        if (!this.token) {
+            await this.ensureToken();
+        }
+        headers['Authorization'] ||= this.token;
 
         route = route.startsWith('/') ? route : '/' + route;
         const response = await fetch(
@@ -236,8 +268,19 @@ export class Api {
         const message = `[${route}] Received ${response.status}: ${response.statusText}. Body: ${text}`;
 
         if (!response.ok) { 
+            let json = null;
+            try {
+                json = JSON.parse(text);
+                if (json.force_reauth && allowReauth && response.status === 401) {
+                    await this.ensureUserData();
+                    await this.ensureToken(true);
+                    return await this.request(method, route, { body, headers, json, params, base, allowReauth: false });
+                }
+            }
+            catch (_) {}
+
             console.error(message);
-            throw new ApiError(route, response, text);
+            throw new ApiError(route, response, text, json);
         }
 
         if (window.debugRequests)
