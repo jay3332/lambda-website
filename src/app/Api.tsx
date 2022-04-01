@@ -108,6 +108,7 @@ export class Api {
                 tt: this.accessTokenType,
                 user_id: this.userData!.id,
             },
+            authenticate: false,
         });
         this.guildStores[guildId] = data;
         return data;
@@ -195,7 +196,10 @@ export class Api {
         if (window.location.hostname !== 'localhost')
             params.redirect_uri = window.location.origin + window.location.pathname;
 
-        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { params });
+        this.oauthData = oauthData = await this.request('POST', '/exchange-oauth', { 
+            params,
+            authenticate: false,
+        });
         this.accessToken = oauthData.access_token;
 
         return this.oauthData!;
