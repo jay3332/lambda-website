@@ -7,7 +7,7 @@ import type { UserData } from '../app/Api';
 
 import LambdaIcon from '../assets/lambda.png';
 
-const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf";
+export const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf";
 
 const NavAndLogin = styled.div`
     display: flex;
@@ -139,6 +139,7 @@ export default function NavBar() {
             <Navigation>
                 <NavigationItemComponent label="Home" href="/"/>
                 <NavigationItemComponent label="Dashboard" href="/guilds"/>
+                <NavigationItemComponent label="Rank Card" href="/rank-card" />
             </Navigation>
             <Login>
                 {user ? (

@@ -137,6 +137,7 @@ export class Api {
 
         let response = await this.request('POST', `/auth/${this.userData!.id}`, {
             params: { token: this.accessToken, tt: this.accessTokenType },
+            authenticate: false,
         });
         this.token = response.token;
         Cookies.set('token', this.token!);
@@ -220,7 +221,8 @@ export class Api {
         });
     }
 
-    fetchRankCard(): Promise<RankCardConfig> {
+    fetchRankCard(): Promise<RankCardConfig | undefined> {
+        if (!this.login()) return new Promise(r => r(undefined));
         return this.request('GET', `/rank-card/${this.userData!.id}`);
     }
 
@@ -239,6 +241,7 @@ export class Api {
             json,
             params,
             base,
+            authenticate = true,
             allowReauth = true,
         }: {
             body?: string,
@@ -246,6 +249,7 @@ export class Api {
             params?: any,
             headers?: any,
             base?: string,
+            authenticate?: boolean,
             allowReauth?: boolean,
         } = {},
     ): Promise<any> {
@@ -253,7 +257,7 @@ export class Api {
             headers['Content-Type'] ||= 'application/json';
             body = JSON.stringify(json)
         }
-        if (!this.token) {
+        if (authenticate && !this.token) {
             await this.ensureToken();
         }
         headers['Authorization'] ||= this.token;
@@ -271,10 +275,10 @@ export class Api {
             let json = null;
             try {
                 json = JSON.parse(text);
-                if (json.force_reauth && allowReauth && response.status === 401) {
+                if (authenticate && json.force_reauth && allowReauth && response.status === 401) {
                     await this.ensureUserData();
                     await this.ensureToken(true);
-                    return await this.request(method, route, { body, headers, json, params, base, allowReauth: false });
+                    return await this.request(method, route, { body, headers, json, params, base, authenticate, allowReauth: false });
                 }
             }
             catch (_) {}
