@@ -182,6 +182,7 @@ export class Api {
     async fetchUserData(): Promise<UserData> {
         const data = await this.request('GET', '/discord/user', {
             params: { token: this.accessToken, tt: this.accessTokenType },
+            authenticate: false,
         });
         this.userData = data;
         return data;
