@@ -134,6 +134,7 @@ export class Api {
                 return token;
             }
         }
+        if (!await this.login()) return null;
 
         let response = await this.request('POST', `/auth/${this.userData!.id}`, {
             params: { token: this.accessToken, tt: this.accessTokenType },
