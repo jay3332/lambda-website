@@ -8,6 +8,7 @@ import Homepage from '../pages/Homepage';
 import Guilds from '../pages/Guilds';
 import Dashboard from '../pages/dashboard/Entrypoint';
 import RankCardEditor from '../pages/RankCardEditor';
+import TermsOfService from "../pages/TermsOfService";
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -79,6 +80,7 @@ export default function App() {
                             <Route path="guilds" element={<Guilds/>} />
                             <Route path="guild/:guildId/*" element={<Dashboard />} />
                             <Route path="rank-card" element={<RankCardEditor />} />
+                            <Route path="terms" element={<TermsOfService />} />
                             <Route index element={<Homepage />}/>
                         </Route>
                     </Routes>

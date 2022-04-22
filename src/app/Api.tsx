@@ -63,6 +63,7 @@ export class ApiError extends Error {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export class Api {
     token: string | null;
     oauthData: OAuthData | null;
@@ -227,9 +228,9 @@ export class Api {
         });
     }
 
-    fetchRankCard(): Promise<RankCardConfig | undefined> {
-        if (!this.login()) return new Promise(r => r(undefined));
-        return this.request('GET', `/rank-card/${this.userData!.id}`);
+    async fetchRankCard(): Promise<RankCardConfig | undefined> {
+        if (!await this.login()) return;
+        return await this.request('GET', `/rank-card/${this.userData!.id}`);
     }
 
     editRankCard(payload: Partial<RankCardConfig>): Promise<{ success: true, updated: RankCardConfig }> {

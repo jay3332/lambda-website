@@ -1,4 +1,6 @@
 import { Api } from './app/Api';
+import React from "react";
+
 declare global {
     type Child = React.ElementType | React.ReactNode;
     type Children = Child | Child[] | Children[];

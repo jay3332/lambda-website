@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { ApiContext } from '../app/Api';
 import type { UserData } from '../app/Api';
@@ -21,7 +21,8 @@ const Navigation = styled.div`
     flex-grow: 1;
     background-color: var(--theme-navbar);
     
-    a {
+    > div > a,
+    > div > div:nth-child(1) > a {
         opacity: 0.6;
         color: var(--theme-text) !important;
         text-decoration: none;
@@ -43,7 +44,6 @@ const Navigation = styled.div`
             left: 0;
             background-color: var(--theme-text);
             visibility: hidden;
-            -webkit-transform: scaleX(0);
             transform: scaleX(0);
             -webkit-transition: all 0.4s ease 0.2s;
             transition: visibility 0.4s, transform 0.4s, -webkit-transform 0.4s ease 0.2s;
@@ -51,7 +51,6 @@ const Navigation = styled.div`
 
         :hover:before {
             visibility: visible;
-            -webkit-transform: scaleX(1);
             transform: scaleX(1);
         }
     }
@@ -59,6 +58,8 @@ const Navigation = styled.div`
 
 const NavigationItemStyle = styled.div`
     display: flex;
+    flex-direction: row;
+    justify-content: center;
     text-align: center;
     padding: 18px;
 `;
@@ -110,7 +111,58 @@ const Icon = styled.img`
     width: 42px;
     border-radius: 50%;
     margin: 16px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+`;
+
+const NavigationDropdownStyle = styled.div`
+    position: relative;
+
+    &:hover > div:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+    }
+`;
+
+const ArrowEffect = styled.div`
+    display: inline-flex;
+    opacity: 0.5;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding-left: 4px;
+    margin-bottom: -9px;
+    margin-top: 7px;
+`;
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+const NavigationDropdownChildren = styled.div`
+    width: 200px;
+    position: absolute;
+    display: none;
+    z-index: 1;
+    box-shadow: 0 16px 8px black;
+    background-color: var(--theme-background-light);
+    animation: ${fadeIn} 0.4s ease-in-out;
+`;
+
+const NavigationDropdownChild = styled(Link)`
+    padding: 10px;
+    color: var(--theme-text) !important;
+    font-size: 18px;
+    transition: background-color 0.4s ease;
+    background-color: var(--theme-background-light);
+
+    &:hover {
+        background-color: var(--theme-background-lightest);
+    }
 `;
 
 function NavigationItemComponent({ label, href }: { label: string, href: string }) {
@@ -119,6 +171,20 @@ function NavigationItemComponent({ label, href }: { label: string, href: string 
             <Link to={href}>{label}</Link>
         </NavigationItemStyle>
     )
+}
+
+function NavigationDropdownComponent({ label, children }: RequiresChildren<{ label: string }>) {
+    return (
+        <NavigationDropdownStyle>
+            <NavigationItemStyle>
+                <a>{label}</a>
+                <ArrowEffect>&#129171;</ArrowEffect>
+            </NavigationItemStyle>
+            <NavigationDropdownChildren>
+                {children}
+            </NavigationDropdownChildren>
+        </NavigationDropdownStyle>
+    );
 }
 
 export default function NavBar() {
@@ -139,7 +205,10 @@ export default function NavBar() {
             <Navigation>
                 <NavigationItemComponent label="Home" href="/"/>
                 <NavigationItemComponent label="Dashboard" href="/guilds"/>
-                <NavigationItemComponent label="Rank Card" href="/rank-card" />
+                <NavigationDropdownComponent label="More">
+                    <NavigationDropdownChild to="/rank-card">Rank Card</NavigationDropdownChild>
+                    <NavigationDropdownChild to="/terms">Terms of Service</NavigationDropdownChild>
+                </NavigationDropdownComponent>
             </Navigation>
             <Login>
                 {user ? (
