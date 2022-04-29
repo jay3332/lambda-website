@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
@@ -14,10 +15,19 @@ const NavAndLogin = styled.div`
     font-size: 20px;
 `;
 
+const NavigationItemStyle = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    padding: 18px;
+`;
+
 const Navigation = styled.div`
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 1.5vmax;
     flex-grow: 1;
     background-color: var(--theme-navbar);
     
@@ -54,30 +64,42 @@ const Navigation = styled.div`
             transform: scaleX(1);
         }
     }
-`;
-
-const NavigationItemStyle = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    padding: 18px;
+  
+    /* TODO: menu-type nav  */
+    @media only screen and (max-width: 720px) {
+        ${NavigationItemStyle} {
+            display: none;
+        }
+    }
 `;
 
 const Login = styled.div`
     display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: var(--theme-login);
-    width: max(15vw, 300px);
+    justify-content: flex-end;
+    background-color: var(--theme-navbar);
+    padding-right: 18px;
 `;
 
-const LoginLink = styled.a`
-    font-weight: bold;
+const LoginLink = styled.a<{ color: string }>`
+    margin: 0 1vmax 0 1.3vmax;
+    font-size: 0.9em;
+    padding: 0.7em 1.1em;
+    background-color: var(--theme-${props => props.color});
+    color: var(--theme-text);
+    border-radius: 0.2em;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--theme-${props => props.color}-hover);
+        color: var(--theme-text);
+    }
 `;
 
 const UserAvatar = styled.img`
-    padding-right: 0.5em;
+    padding-right: 0.6em;
     border-radius: 50%;
     width: 40px;
 `;
@@ -218,9 +240,21 @@ export default function NavBar() {
                             <LoggedInAs>Logged in as</LoggedInAs>
                             <UserTag>{user.username}#{user.discriminator}</UserTag>
                         </UserDetails>
+                        <LoginLink color="danger" onClick={e => {
+                            e.preventDefault();
+                            api.token = null;
+                            api.accessToken = null;
+                            api.userData = null;
+                            Cookies.remove('access_token');
+                            Cookies.remove('token');
+                            Cookies.remove('user_data');
+                            window.location.reload();
+                        }}>
+                            Log Out
+                        </LoginLink>
                     </>
                 ) : (
-                    <LoginLink href={OAUTH_URL}>
+                    <LoginLink href={OAUTH_URL} color="primary">
                         Log In
                     </LoginLink>
                 )}

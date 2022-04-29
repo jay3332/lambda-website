@@ -5,6 +5,7 @@ import { ApiContext } from '../app/Api';
 import NavBar, { OAUTH_URL } from '../components/NavBar';
 import RankCard, { RankCardConfig } from '../components/RankCard';
 import Title from '../components/Title';
+import Footer from "../components/Footer";
 
 const Container = styled.div`
     display: flex;
@@ -131,6 +132,7 @@ export default function RankCardEditor() {
             ) : (
                 <div>Loading...</div>
             )}
+            <Footer />
         </>
     );
 }

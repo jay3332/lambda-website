@@ -6,6 +6,7 @@ import { ApiContext, GuildData } from '../app/Api';
 import NavBar from '../components/NavBar';
 import Title from '../components/Title';
 import { BOT_INVITE } from './Homepage';
+import Footer from "../components/Footer";
 
 const GUILDS_OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf/guilds";
 
@@ -172,6 +173,7 @@ export default function Guilds() {
                     </GuildsView>
                 </GuildArea>
             )}
+            <Footer />
         </>
     );
 }

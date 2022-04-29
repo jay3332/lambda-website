@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Title from '../components/Title';
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const Container = styled.div`
     padding: 12px;
@@ -81,6 +82,7 @@ export default function TermsOfService() {
                     Any attempt to evade these terms or punishments from failure to abide by these terms is prohibited.
                 </p>
             </Container>
+            <Footer />
         </>
     )
 }

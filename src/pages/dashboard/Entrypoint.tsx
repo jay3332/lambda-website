@@ -6,6 +6,7 @@ import { ApiContext, GuildData } from '../../app/Api';
 import NavBar from '../../components/NavBar';
 import Title from '../../components/Title';
 import DashboardHome from './Home';
+import Footer from "../../components/Footer";
 
 const GuildBar = styled.div`
     display: flex;
@@ -70,6 +71,7 @@ export default function DashboardEntrypoint() {
             <Routes>
                 <Route path='*' element={<DashboardHome />} />
             </Routes>
+            <Footer />
         </>
     );
 }
