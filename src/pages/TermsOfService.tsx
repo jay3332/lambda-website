@@ -25,14 +25,13 @@ export default function TermsOfService() {
                 <p>
                     The terms written here tend to be very vague. Do not attempt to work around these terms.
                     Any consequence decided by those who operate this service is final.
-
-                    <h3>Please note:</h3>
-                    <ul>
-                        <li>"The bot" or "This bot" refers to the Discord Bot running instance of Lambda.</li>
-                        <li>"The [bot] owner" or "Those who operate this service" is self-explanitory.</li>
-                        <li>"The service" or "This service" refers to the bot, this website, and/or anything of relevance.</li>
-                    </ul>
                 </p>
+                <h3>Please note:</h3>
+                <ul>
+                    <li>"The bot" or "This bot" refers to the Discord Bot running instance of Lambda.</li>
+                    <li>"The [bot] owner" or "Those who operate this service" is self-explanitory.</li>
+                    <li>"The service" or "This service" refers to the bot, this website, and/or anything of relevance.</li>
+                </ul>
                 <h2>Section 1: Bot</h2>
                 <p>Terms stated in this section are enforced over the VoIP chat service, <b>Discord</b>.</p>
                 <h3>1a: Denial of Service</h3>
@@ -40,13 +39,11 @@ export default function TermsOfService() {
                     This refers to anything intentially done to deny service of the bot, that is, actions done to slow down or
                     prevent the bot from functioning properly.
                 </p>
-                <p>
-                    This includes, but is not limited to, the following:
-                    <ul>
-                        <li>Spamming: requesting services from Lambda unnecessarily fast</li>
-                        <li>Large payloads: continuously requesting Lambda to use its service to process such of a large payload, e.g. a large image.</li>
-                    </ul>
-                </p>
+                <p>This includes, but is not limited to, the following:</p>
+                <ul>
+                    <li>Spamming: requesting services from Lambda unnecessarily fast</li>
+                    <li>Large payloads: continuously requesting Lambda to use its service to process such of a large payload, e.g. a large image.</li>
+                </ul>
                 <h3>1b: Discord Terms of Service and Community Guidelines</h3>
                 <p>
                     You are required to follow <a href='https://discord.com/terms'>Discord's Terms of Service</a>
@@ -58,11 +55,11 @@ export default function TermsOfService() {
                     This refers to anything that is intentionally done to cause the bot to malfunction, that is, actions done to
                     cause the bot to crash or to cause it to behave in a way that is not intended. These are usually fed
                     off of an already existing bug or vulnerability.
-                    <h4>What to do if find a bug?</h4>
-                    <p>
-                        You may inform those who operate this service of said vulnerability in our&nbsp;
-                        <a href='https://discord.gg/vuAPY6MQF5'>Support Server</a>.
-                    </p>
+                </p>
+                <h4>What to do if find a bug?</h4>
+                <p>
+                    You may inform those who operate this service of said vulnerability in our&nbsp;
+                    <a href='https://discord.gg/vuAPY6MQF5'>Support Server</a>.
                 </p>
                 <h2>Section 2: Service</h2>
                 <p>Terms stated in this section are enforce throughout the entire service.</p>

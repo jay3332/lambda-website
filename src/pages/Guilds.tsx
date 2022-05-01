@@ -8,6 +8,8 @@ import Title from '../components/Title';
 import { BOT_INVITE } from './Homepage';
 import Footer from "../components/Footer";
 
+import SearchIcon from '../assets/search.svg';
+
 const GUILDS_OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf/guilds";
 
 const LoggedOutText = styled.p`
@@ -96,16 +98,39 @@ const GuildReason = styled.span`
     opacity: 0.6;
 `;
 
+const GuildSearchIcon = styled.img`
+  filter: invert(1) brightness(1);
+  width: 22px;
+`;
+
+const GuildSearchGroup = styled.div`
+  ${GuildSearchIcon} {
+    position: absolute;
+    padding-top: 26px;
+    padding-left: 12px;
+    opacity: 0.6;
+    user-select: none;
+  }
+  
+  display: flex;
+  flex-grow: 1;
+  width: 80vw;
+  margin: 16px auto;
+  
+  @media screen and (max-width: 768px) {
+    width: 70vw;
+  }
+`;
+
 const GuildSearch = styled.input`
-    flex-grow: 1;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--theme-login);
-    width: min(80vw, 400px);
-    height: 40px;
-    font-size: 20px;
-    margin: 16px;
-    padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  color: var(--theme-text);
+  background-color: var(--theme-background-light);
+  padding: 12px 0 12px 48px;
+  flex-grow: 1;
+  margin: 16px auto;
 `;
 
 export default function Guilds() {
@@ -133,7 +158,10 @@ export default function Guilds() {
                 <GuildArea>
                     <h1>Servers</h1>
                     <p>Please select a server to continue.</p>
-                    <GuildSearch onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." />
+                    <GuildSearchGroup>
+                        <GuildSearchIcon src={SearchIcon} />
+                        <GuildSearch onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." />
+                    </GuildSearchGroup>
                     <GuildsView>
                         {guilds ? guilds.filter(
                             g =>

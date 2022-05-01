@@ -13,6 +13,10 @@ export const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_
 const NavAndLogin = styled.div`
     display: flex;
     font-size: 20px;
+  
+    * {
+        user-select: none;
+    }
 `;
 
 const NavigationItemStyle = styled.div`
@@ -66,7 +70,7 @@ const Navigation = styled.div`
     }
   
     /* TODO: menu-type nav  */
-    @media only screen and (max-width: 720px) {
+    @media only screen and (max-width: 1000px) {
         ${NavigationItemStyle} {
             display: none;
         }
@@ -226,6 +230,7 @@ export default function NavBar() {
             </IconContainer>
             <Navigation>
                 <NavigationItemComponent label="Home" href="/"/>
+                <NavigationItemComponent label="Commands" href="/commands" />
                 <NavigationItemComponent label="Dashboard" href="/guilds"/>
                 <NavigationDropdownComponent label="More">
                     <NavigationDropdownChild to="/rank-card">Rank Card</NavigationDropdownChild>

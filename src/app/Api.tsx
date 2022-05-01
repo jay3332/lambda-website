@@ -47,6 +47,36 @@ export type PrefixRouteSuccessData = {
     success: true,
 };
 
+export type CommandData = {
+    name: string,
+    aliases: string[],
+    description: string,
+    arguments: {
+        [name: string]: string,
+    },
+    flags: {
+        [name: string]: string,
+    },
+    permissions: {
+        bot: string[],
+        user: string[],
+    },
+    cooldown?: {
+        rate: number,
+        per: number,
+        per_humanized: string,
+        type: string,
+    },
+    signature: {
+        name: string,
+        required: boolean,
+        choices?: string[],
+        default?: any,
+        store_true: boolean,
+    }[],
+    category: string,
+};
+
 export class ApiError extends Error {
     route: string;
     response: Response;
@@ -72,6 +102,7 @@ export class Api {
     accessTokenType: string | null;
     guilds: GuildData[] | null;
     guildStores: { [ guildId: string ]: GuildStoredData };
+    commands: { [ category: string ]: CommandData[] } | null;
 
     constructor() {
         this.token = null;
@@ -81,6 +112,7 @@ export class Api {
         this.userData = null;
         this.guilds = null;
         this.guildStores = {};
+        this.commands = null;
     }
 
     async ensureUserData() {
@@ -175,6 +207,20 @@ export class Api {
             await this.ensureUserData();
             return token;
         }
+    }
+
+    async ensureCommands(): Promise<{ [ category: string ]: CommandData[] }> {
+        if (this.commands != null) return this.commands;
+
+        let data: { [ category: string ]: CommandData[] } = await this.request('GET', '/commands');
+        this.commands = data;
+
+        Object.entries(data).forEach(([ category, commands ]) => {
+            commands.forEach(command => {
+                command.category = category;
+            });
+        });
+        return data;
     }
 
     async login(): Promise<boolean> {

@@ -9,12 +9,14 @@ import Guilds from '../pages/Guilds';
 import Dashboard from '../pages/dashboard/Entrypoint';
 import RankCardEditor from '../pages/RankCardEditor';
 import TermsOfService from "../pages/TermsOfService";
-import Footer from "../components/Footer";
+import Commands from "../pages/Commands";
 
 const GlobalStyle = createGlobalStyle`
   :root {
     --font-primary: 'Inter', serif;
-    --theme-background-lightest: #34353a;
+    --font-monospace: 'JetBrains Mono', monospace;
+    --theme-background-lightest: #3e4045;
+    --theme-background-lighter: #313337;
     --theme-background-light: #29292e;
     --theme-background: #1a1d1d;
     --theme-text: #ffffff;
@@ -32,11 +34,17 @@ const GlobalStyle = createGlobalStyle`
     --theme-danger-hover: #dc4350;
     --theme-navbar: #222325;
     --theme-login: #121213;
+    --theme-signature-required: #d56b22;
+    --theme-signature-optional: #2d80d5;
   }
 
   * {
     font-family: var(--font-primary);
     color: var(--theme-text);
+  }
+
+  code {
+    font-family: var(--font-monospace);
   }
 
   body {
@@ -86,6 +94,7 @@ export default function App() {
                             <Route path="guild/:guildId/*" element={<Dashboard />} />
                             <Route path="rank-card" element={<RankCardEditor />} />
                             <Route path="terms" element={<TermsOfService />} />
+                            <Route path="commands" element={<Commands />} />
                             <Route index element={<Homepage />}/>
                         </Route>
                     </Routes>

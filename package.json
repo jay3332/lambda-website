@@ -14,15 +14,18 @@
     "dependencies": {
         "@babel/core": "^7.16.0",
         "js-cookie": "^3.0.0",
+        "markdown-it": "^13.0.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-helmet": "^6.1.0",
         "react-router-dom": "^6.0.0",
+        "react-tooltip": "^4.2.21",
         "styled-components": "^5.3.3"
     },
     "devDependencies": {
         "@types/babel__core": "^7.1.17",
         "@types/js-cookie": "^3.0.0",
+        "@types/markdown-it": "*",
         "@types/node": "^16.9.1",
         "@types/react": "^17.0.42",
         "@types/react-dom": "^17.0.0",

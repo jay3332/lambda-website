@@ -8,6 +8,7 @@ export default function Title({ children, favicon = DefaultFavicon }: RequiresCh
         <Helmet>
             <title>{children}</title>
             {favicon && <link rel="icon" href={favicon} />}
+            <meta property="og:image" content={favicon} />
         </Helmet>
     );
 }
