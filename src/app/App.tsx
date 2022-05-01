@@ -13,7 +13,7 @@ import Commands from "../pages/Commands";
 
 const GlobalStyle = createGlobalStyle`
   :root {
-    --font-primary: 'Inter', serif;
+    --font-primary: 'Inter', sans-serif;
     --font-monospace: 'JetBrains Mono', monospace;
     --theme-background-lightest: #3e4045;
     --theme-background-lighter: #313337;
