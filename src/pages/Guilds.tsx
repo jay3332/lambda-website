@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 
 import SearchIcon from '../assets/search.svg';
 
-const GUILDS_OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf/guilds";
+const GUILDS_OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambda.jay3332.tech/guilds";
 
 const LoggedOutText = styled.p`
     font-size: 20px;
