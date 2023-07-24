@@ -8,7 +8,7 @@ import type { UserData } from '../app/Api';
 
 import LambdaIcon from '../assets/lambda.png';
 
-export const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambdabot.cf";
+export const OAUTH_URL: string = "https://discord.com/oauth2/authorize?response_type=code&client_id=734872509912186921&scope=identify%20guilds&redirect_uri=https://lambda.jay3332.tech";
 
 const NavAndLogin = styled.div`
     display: flex;

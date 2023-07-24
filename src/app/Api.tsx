@@ -4,7 +4,7 @@ import { createContext } from 'react';
 import type { RankCardConfig } from '../components/RankCard';
 
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
-export const BASE_API_URL = 'https://api.lambdabot.cf';
+export const BASE_API_URL = 'https://lambda-api.jay3332.tech';
 
 export type OAuthData = {
     access_token: string,
