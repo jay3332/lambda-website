@@ -10,6 +10,7 @@ import Dashboard from '../pages/dashboard/Entrypoint';
 import RankCardEditor from '../pages/RankCardEditor';
 import TermsOfService from "../pages/TermsOfService";
 import Commands from "../pages/Commands";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -94,6 +95,7 @@ export default function App() {
                             <Route path="guild/:guildId/*" element={<Dashboard />} />
                             <Route path="rank-card" element={<RankCardEditor />} />
                             <Route path="terms" element={<TermsOfService />} />
+                            <Route path="privacy" element={<PrivacyPolicy />} />
                             <Route path="commands" element={<Commands />} />
                             <Route index element={<Homepage />}/>
                         </Route>

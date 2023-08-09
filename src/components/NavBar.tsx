@@ -235,6 +235,7 @@ export default function NavBar() {
                 <NavigationDropdownComponent label="More">
                     <NavigationDropdownChild to="/rank-card">Rank Card</NavigationDropdownChild>
                     <NavigationDropdownChild to="/terms">Terms of Service</NavigationDropdownChild>
+                    <NavigationDropdownChild to="/privacy">Privacy Policy</NavigationDropdownChild>
                 </NavigationDropdownComponent>
             </Navigation>
             <Login>
